@@ -14,7 +14,7 @@ relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
 pygame.display.set_caption("TRON: Legacy")
 icone  = pygame.image.load("Recursos/icone.png")
-#pygame.display.set_icon(icone)
+pygame.display.set_icon(icone)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
 menuTron = pygame.image.load("Recursos/menuTron.png")
@@ -51,7 +51,7 @@ def jogar():
     pos_x = (largura_tela - largura_janela) // 2
     pos_y = (altura_tela - altura_janela) // 2
     root.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
-    root.title("Digite seu Username:")
+    root.title("Identifique-se, Usuário:")
     root.protocol("WM_DELETE_WINDOW", obter_nome)
 
     entry_nome = tk.Entry(root)
@@ -133,10 +133,9 @@ def jogar():
         if player_rect.y < 0:
             player_rect.y = 0
             player_speed_y = 0
-        if player_rect.y > tamanho[1] - player_rect.height:
-            player_rect.y = tamanho[1] - player_rect.height
-            player_speed_y = 0
-
+        if player_rect.y >= tamanho[1] - player_rect.height:
+            dead()  # Chama a tela de morte
+            return
         # Criar obstáculos
         obstacle_timer += 1
         if obstacle_timer > 120:
