@@ -14,7 +14,7 @@ relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
 pygame.display.set_caption("TRON: Legacy")
 icone  = pygame.image.load("Recursos/icone.png")
-pygame.display.set_icon(icone)
+#pygame.display.set_icon(icone)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
 menuTron = pygame.image.load("Recursos/menuTron.png")
@@ -81,6 +81,29 @@ def jogar():
 
     pontos = 0
     rodando = True
+
+    # Define fonte se ainda não tiver
+    fonteMenu = pygame.font.SysFont("comicsans", 48)
+
+    # Define a contagem regressiva
+    def contagem_regressiva():
+        for i in range(3, 0, -1):
+            tela.blit(mainFundo, (0, 0))
+            tela.blit(mainJogador, player_rect)
+            texto = fonteMenu.render(str(i), True, branco)
+            tela.blit(texto, (tamanho[0] // 2 - texto.get_width() // 2, tamanho[1] // 2))
+            pygame.display.update()
+            pygame.time.delay(1000)
+
+        tela.blit(mainFundo, (0, 0))
+        tela.blit(mainJogador, player_rect)
+        texto = fonteMenu.render("GO!", True, branco)
+        tela.blit(texto, (tamanho[0] // 2 - texto.get_width() // 2, tamanho[1] // 2))
+        pygame.display.update()
+        pygame.time.delay(1000)
+
+    # Chama a contagem antes de começar o jogo
+    contagem_regressiva()
 
     while rodando:
         relogio.tick(60)
