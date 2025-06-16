@@ -25,10 +25,11 @@ fundoCreditos = pygame.image.load("Recursos/fundoCreditos.jpg")
 mainJogador = pygame.image.load("Recursos/mainJogador.png")
 mainObstaculo = pygame.image.load("Recursos/mainObstaculo.png")
 mainFundo = pygame.image.load("Recursos/mainFundo.png")
+fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
 #somMoeda = pygame.mixer.Sound("assets/explosao.wav")
-#fonteMenu = pygame.font.SysFont("comicsans",18)
-#fonteMorte = pygame.font.SysFont("arial",120)
+fonteMenu = pygame.font.SysFont("comicsans",18)
+fonteMorte = pygame.font.SysFont("arial",120)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
 
@@ -154,11 +155,9 @@ def jogar():
 
             # Detectar colisão player x obstáculo
             if player_rect.colliderect(obst):
-                # Aqui você pode chamar sua função de morte
-                print("Colidiu!")
-                rodando = False
-                # chamar função dead() se quiser
-                # dead()
+                pygame.mixer.music.stop()
+                dead()
+                return  # Sai da função jogar() e volta para o menu
         
         # Desenhar player
         tela.blit(mainJogador, player_rect)
@@ -259,7 +258,7 @@ def creditos():
 
 def dead():
     pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(explosaoSound)
+    #pygame.mixer.Sound.play(explosaoSound)
     larguraButtonStart = 150
     alturaButtonStart  = 40
     larguraButtonQuit = 150
@@ -270,18 +269,18 @@ def dead():
     root.title("Tela da Morte")
 
     # Adiciona um título na tela
-    label = tk.Label(root, text="Log das Partidas", font=("Arial", 16))
-    label.pack(pady=10)
+    #label = tk.Label(root, text="Log das Partidas", font=("Arial", 16))
+    #label.pack(pady=10)
 
     # Criação do Listbox para mostrar o log
-    listbox = tk.Listbox(root, width=50, height=10, selectmode=tk.SINGLE)
-    listbox.pack(pady=20)
+    #listbox = tk.Listbox(root, width=50, height=10, selectmode=tk.SINGLE)
+    #listbox.pack(pady=20)
 
     # Adiciona o log das partidas no Listbox
-    log_partidas = open("base.atitus", "r").read()
-    log_partidas = json.loads(log_partidas)
-    for chave in log_partidas:
-        listbox.insert(tk.END, f"Pontos: {log_partidas[chave][0]} na data: {log_partidas[chave][1]} - Nickname: {chave}")  # Adiciona cada linha no Listbox
+    #log_partidas = open("base.atitus", "r").read()
+    #log_partidas = json.loads(log_partidas)
+    #for chave in log_partidas:
+        #listbox.insert(tk.END, f"Pontos: {log_partidas[chave][0]} na data: {log_partidas[chave][1]} - Nickname: {chave}")  # Adiciona cada linha no Listbox
     
     root.mainloop()
     while True:
@@ -313,7 +312,7 @@ def dead():
             
             
         tela.fill(branco)
-        tela.blit(fundoDead, (0,0) )
+        tela.blit(fundoMorte, (0,0) )
 
         
         startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
