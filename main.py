@@ -21,7 +21,7 @@ menuTron = pygame.image.load("Recursos/menuTron.png")
 menuJogar = pygame.image.load("Recursos/menuJogar.png")
 menuSair = pygame.image.load("Recursos/menuSair.png")
 menuCreditos = pygame.image.load("Recursos/menuCreditos.png")
-fundoCreditos = pygame.image.load("Recursos/fundoCreditos.jpg")
+fundoCreditos = pygame.image.load("Recursos/fundoCreditos.png")
 mainJogador = pygame.image.load("Recursos/mainJogador.png")
 mainObstaculo = pygame.image.load("Recursos/mainObstaculo.png")
 mainFundo = pygame.image.load("Recursos/mainFundo.png")
@@ -56,6 +56,7 @@ def jogar():
 
     pontos = 0
     rodando = True
+    pausado = False
 
     # Define fonte se ainda não tiver
     fonteMenu = pygame.font.SysFont("comicsans", 48)
@@ -77,7 +78,11 @@ def jogar():
         pygame.display.update()
         pygame.time.delay(1000)
 
-    # Chama a contagem antes de começar o jogo
+    def telaPausa():
+        textoPausa = fonteMenu.render("Jogo Pausado - Pressione ESPAÇO", True, branco)
+        tela.blit(textoPausa, (tamanho[0] // 2 - textoPausa.get_width() // 2, tamanho[1] // 2))
+        pygame.display.update()
+
     contagem_regressiva()
 
     while rodando:
@@ -87,8 +92,15 @@ def jogar():
             if evento.type == pygame.QUIT:
                 rodando = False
             elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_SPACE:
+                if evento.key == pygame.K_UP:
                     player_speed_y = fly_force
+                if evento.key == pygame.K_SPACE:
+                    pausado = not pausado  # Alterna pausa
+
+        if pausado:
+            telaPausa()
+            continue  # Volta para o início do loop sem atualizar o jogo
+                            
 
         # Movimento fundo
         bg_x -= velocidade_fundo
@@ -108,8 +120,9 @@ def jogar():
             player_rect.y = 0
             player_speed_y = 0
         if player_rect.y >= tamanho[1] - player_rect.height:
-            dead()  # Chama a tela de morte
+            dead()
             return
+        
         # Criar obstáculos
         obstacle_timer += 1
         if obstacle_timer > 120:
@@ -130,7 +143,7 @@ def jogar():
             if player_rect.colliderect(obst):
                 pygame.mixer.music.stop()
                 dead()
-                return  # Sai da função jogar() e volta para o menu
+                return 
         
         # Desenhar player
         tela.blit(mainJogador, player_rect)
@@ -145,7 +158,7 @@ def capturar_nome():
     nome = ""
 
     def obter_nome():
-        nonlocal entry_nome  # ← permite acessar a variável da função externa
+        nonlocal entry_nome
         nome_input = entry_nome.get()
         if not nome_input:
             messagebox.showwarning("Aviso", "Por favor, digite seu nome!")
