@@ -3,12 +3,12 @@ import random
 import os
 import tkinter as tk
 from tkinter import messagebox
-#from Recursos.basicos import inicializarBancoDeDados
-#from Recursos.funcoes import escreverDados
+from Recursos.funcoes import salvar_log
+from Recursos.funcoes import inicializarBancoDeDados
 import json
 
 pygame.init()
-#inicializarBancoDeDados()
+inicializarBancoDeDados
 tamanho = (1000,700)
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
@@ -118,7 +118,7 @@ def jogar():
             player_rect.y = 0
             player_speed_y = 0
         if player_rect.y >= tamanho[1] - player_rect.height:
-            dead()
+            dead(pontos)
             return
         
         # Criar obstáculos
@@ -140,14 +140,14 @@ def jogar():
             # Detectar colisão player x obstáculo
             if player_rect.colliderect(obst):
                 pygame.mixer.music.stop()
-                dead()
+                dead(pontos)
                 return 
         
         # Desenhar player
         tela.blit(mainJogador, player_rect)
 
-        # Desenhar pontos na tela (você pode adaptar depois)
-        # fonteMenu.render deve estar definida no seu código
+        texto_pontos = fonteNome.render(f"Pontos: {pontos}", True, azul)
+        tela.blit(texto_pontos, (10, 10))
 
         pygame.display.update()
 
@@ -269,30 +269,39 @@ def creditos():
         pygame.display.update()
         relogio.tick(60)
 
-def dead():
+def dead(pontos):
     pygame.mixer.music.stop()
-    #pygame.mixer.Sound.play(explosaoSound)
+
+    salvar_log(nome, pontos)
+
     larguraButtonVoltar = 415
     alturaButtonVoltar = 120
-     
-    root = tk.Tk()
-    root.title("Tela da Morte")
 
-    # Adiciona um título na tela
-    #label = tk.Label(root, text="Log das Partidas", font=("Arial", 16))
-    #label.pack(pady=10)
+    try:
+        with open("log.dat", "r") as arquivo:
+            conteudo = arquivo.read().strip()
+            if conteudo:
+                log_partidas = json.loads(conteudo)
+            else:
+                log_partidas = []
+    except (FileNotFoundError, json.JSONDecodeError):
+        log_partidas = []
 
-    # Criação do Listbox para mostrar o log
-    #listbox = tk.Listbox(root, width=50, height=10, selectmode=tk.SINGLE)
-    #listbox.pack(pady=20)
+    ultimosLogs = log_partidas[-5:]
 
-    # Adiciona o log das partidas no Listbox
-    #log_partidas = open("base.atitus", "r").read()
-    #log_partidas = json.loads(log_partidas)
-    #for chave in log_partidas:
-        #listbox.insert(tk.END, f"Pontos: {log_partidas[chave][0]} na data: {log_partidas[chave][1]} - Nickname: {chave}")  # Adiciona cada linha no Listbox
-    
-    root.mainloop()
+    logsRenderizados = []
+    for registro in reversed(ultimosLogs):
+        nomeLog = registro["nome"]
+        dataLog = registro["data"]
+        horaLog = registro["hora"]
+        pontosLog = registro.get("pontos", 0)
+        textoLog = f"{nomeLog} - {dataLog} às {horaLog} - Pontos: {pontosLog}"
+        textoLogRender = fonteNome.render(textoLog, True, azul)
+        logsRenderizados.append(textoLogRender)
+
+    voltarButton = pygame.image.load("Recursos/morteVoltar.png")
+    voltarRect = voltarButton.get_rect(topleft=(275, 345))
+
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -305,15 +314,15 @@ def dead():
                 if voltarRect.collidepoint(evento.pos):
                     pygame.mixer.music.load("Recursos/somMenu.mp3")
                     pygame.mixer.music.play(-1)
-                    larguraButtonVoltar = 415
-                    alturaButtonVoltar = 120
                     return
-                        
-        tela.fill(branco)
-        tela.blit(fundoMorte, (0,0) )
 
-        voltarButton = pygame.image.load("Recursos/morteVoltar.png")
-        voltarRect = voltarButton.get_rect(topleft=(275, 345))
+        tela.fill(branco)
+        tela.blit(fundoMorte, (0, 0))
+        yOffSet = 500
+        for linha in logsRenderizados:
+            tela.blit(linha, (300, yOffSet))
+            yOffSet += 40
+
         tela.blit(voltarButton, (275, 345))
 
         pygame.display.update()
