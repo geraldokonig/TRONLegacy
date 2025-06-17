@@ -13,7 +13,7 @@ tamanho = (1000,700)
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
 pygame.display.set_caption("TRON: Legacy")
-icone  = pygame.image.load("Recursos/icone.png")
+icone = pygame.image.load("Recursos/icone.png")
 pygame.display.set_icon(icone)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
@@ -28,8 +28,7 @@ mainFundo = pygame.image.load("Recursos/mainFundo.png")
 fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
 #somMoeda = pygame.mixer.Sound("assets/explosao.wav")
-fonteMenu = pygame.font.SysFont("comicsans",18)
-fonteMorte = pygame.font.SysFont("arial",120)
+fonteNome = pygame.font.SysFont("arial",120)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
 
@@ -174,9 +173,6 @@ def start():
     alturaButtonSair  = 91
     larguraButtonCreditos = 401
     alturaButtonCreditos = 91
-    larguraButtonVoltar = 401
-    alturaButtonVoltar = 91
-    
 
     while True:
         for evento in pygame.event.get():
@@ -258,12 +254,9 @@ def creditos():
 def dead():
     pygame.mixer.music.stop()
     #pygame.mixer.Sound.play(explosaoSound)
-    larguraButtonStart = 150
-    alturaButtonStart  = 40
-    larguraButtonQuit = 150
-    alturaButtonQuit  = 40
-    
-    
+    larguraButtonVoltar = 401
+    alturaButtonVoltar = 91
+     
     root = tk.Tk()
     root.title("Tela da Morte")
 
@@ -287,45 +280,42 @@ def dead():
             if evento.type == pygame.QUIT:
                 quit()
             elif evento.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.collidepoint(evento.pos):
-                    larguraButtonStart = 140
-                    alturaButtonStart  = 35
-                if quitButton.collidepoint(evento.pos):
-                    larguraButtonQuit = 140
-                    alturaButtonQuit  = 35
-
-                
+                if voltarRect.collidepoint(evento.pos):
+                    larguraButtonVoltar = 401
+                    alturaButtonVoltar = 91
             elif evento.type == pygame.MOUSEBUTTONUP:
-                if startButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonStart = 150
-                    alturaButtonStart  = 40
-                    jogar()
-                if quitButton.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
-                    larguraButtonQuit = 150
-                    alturaButtonQuit  = 40
-                    quit()
-                    
-        
-            
-            
+                if voltarRect.collidepoint(evento.pos):
+                    larguraButtonVoltar = 401
+                    alturaButtonVoltar = 91
+                    return
+                        
         tela.fill(branco)
         tela.blit(fundoMorte, (0,0) )
 
-        
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
-        tela.blit(startTexto, (25,12))
-        
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
-        tela.blit(quitTexto, (25,62))
-
+        voltarButton = pygame.image.load("Recursos/menuVoltar.png")
+        voltarRect = voltarButton.get_rect(topleft=(50, 50))
+        tela.blit(voltarButton, (50,50))
 
         pygame.display.update()
         relogio.tick(60)
 
+def telaBoasVindas():
+    fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.jpg")
+    textoBemVindo = fonteNome.render(f"{nome}, True, branco")
+    falar("Bem Vindo", nome)
 
+    while True:
+        tela.fill(branco)
+        tela.blit(fundoBoasVindas, (0, 0))
+        tela.blit(textoBemVindo, (450, 0))
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                quit()
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                jogar()
+
+        pygame.display.update()
+        relogio.tick(60)
 
 start()
