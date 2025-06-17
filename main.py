@@ -29,7 +29,7 @@ mainFundo = pygame.image.load("Recursos/mainFundo.png")
 fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
 #somMoeda = pygame.mixer.Sound("assets/explosao.wav")
-fonteNome = pygame.font.SysFont("TRON",50)
+fonteNome = pygame.font.SysFont("TRON",20)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
 
@@ -59,32 +59,29 @@ def jogar():
     rodando = True
     pausado = False
 
-    # Define fonte se ainda não tiver
-    fonteMenu = pygame.font.SysFont("comicsans", 48)
-
     # Define a contagem regressiva
-    def contagem_regressiva():
+    def contagemRegressiva():
         for i in range(3, 0, -1):
             tela.blit(mainFundo, (0, 0))
             tela.blit(mainJogador, player_rect)
-            texto = fonteMenu.render(str(i), True, branco)
+            texto = fonteNome.render(str(i), True, azul)
             tela.blit(texto, (tamanho[0] // 2 - texto.get_width() // 2, tamanho[1] // 2))
             pygame.display.update()
             pygame.time.delay(1000)
 
         tela.blit(mainFundo, (0, 0))
         tela.blit(mainJogador, player_rect)
-        texto = fonteMenu.render("GO!", True, branco)
+        texto = fonteNome.render("GO!", True, azul)
         tela.blit(texto, (tamanho[0] // 2 - texto.get_width() // 2, tamanho[1] // 2))
         pygame.display.update()
         pygame.time.delay(1000)
 
     def telaPausa():
-        textoPausa = fonteMenu.render("Jogo Pausado - Pressione ESPAÇO", True, branco)
+        textoPausa = fonteNome.render("Jogo Pausado - Pressione ESPAÇO", True, azul)
         tela.blit(textoPausa, (tamanho[0] // 2 - textoPausa.get_width() // 2, tamanho[1] // 2))
         pygame.display.update()
 
-    contagem_regressiva()
+    contagemRegressiva()
 
     while rodando:
         relogio.tick(60)
@@ -96,11 +93,11 @@ def jogar():
                 if evento.key == pygame.K_UP:
                     player_speed_y = fly_force
                 if evento.key == pygame.K_SPACE:
-                    pausado = not pausado  # Alterna pausa
+                    pausado = not pausado
 
         if pausado:
             telaPausa()
-            continue  # Volta para o início do loop sem atualizar o jogo
+            continue
                             
 
         # Movimento fundo
@@ -275,8 +272,8 @@ def creditos():
 def dead():
     pygame.mixer.music.stop()
     #pygame.mixer.Sound.play(explosaoSound)
-    larguraButtonVoltar = 401
-    alturaButtonVoltar = 91
+    larguraButtonVoltar = 415
+    alturaButtonVoltar = 120
      
     root = tk.Tk()
     root.title("Tela da Morte")
@@ -302,35 +299,37 @@ def dead():
                 quit()
             elif evento.type == pygame.MOUSEBUTTONDOWN:
                 if voltarRect.collidepoint(evento.pos):
-                    larguraButtonVoltar = 401
-                    alturaButtonVoltar = 91
+                    larguraButtonVoltar = 415
+                    alturaButtonVoltar = 120
             elif evento.type == pygame.MOUSEBUTTONUP:
                 if voltarRect.collidepoint(evento.pos):
                     pygame.mixer.music.load("Recursos/somMenu.mp3")
                     pygame.mixer.music.play(-1)
-                    larguraButtonVoltar = 401
-                    alturaButtonVoltar = 91
+                    larguraButtonVoltar = 415
+                    alturaButtonVoltar = 120
                     return
                         
         tela.fill(branco)
         tela.blit(fundoMorte, (0,0) )
 
-        voltarButton = pygame.image.load("Recursos/menuVoltar.png")
-        voltarRect = voltarButton.get_rect(topleft=(50, 50))
-        tela.blit(voltarButton, (50,50))
+        voltarButton = pygame.image.load("Recursos/morteVoltar.png")
+        voltarRect = voltarButton.get_rect(topleft=(275, 345))
+        tela.blit(voltarButton, (275, 345))
 
         pygame.display.update()
         relogio.tick(60)
 
 def telaBoasVindas():
     fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.png")
-    textoBemVindo = fonteNome.render(f"Bem-Vindo {nome}\nRecolha os fragmentos da sua nave e sobreviva\nPressione ESPAÇO para Pausar\n", True, azul)
+    textoBemVindo = fonteNome.render(f"Bem-Vindo {nome}", True, azul)
+    textoInstrucoes = fonteNome.render(f"Recolha os fragmentos da sua nave", True, azul)
     #falar("Bem Vindo", nome)
 
     while True:
         tela.fill(branco)
         tela.blit(fundoBoasVindas, (0, 0))
-        tela.blit(textoBemVindo, (100, 0))
+        tela.blit(textoBemVindo, (370, 155))
+        tela.blit(textoInstrucoes, (200, 215))
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
