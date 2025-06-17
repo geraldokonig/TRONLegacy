@@ -35,31 +35,6 @@ pygame.mixer.music.play(-1)
 def jogar():
     largura_janela = 300
     altura_janela = 50
-    def obter_nome():
-        global nome
-        nome = entry_nome.get()
-        if not nome:
-            messagebox.showwarning("Aviso", "Por favor, digite seu nome!")
-        else:
-            print(f'Nome digitado: {nome}')
-            root.destroy()
-
-    root = tk.Tk()
-    largura_tela = root.winfo_screenwidth()
-    altura_tela = root.winfo_screenheight()
-    pos_x = (largura_tela - largura_janela) // 2
-    pos_y = (altura_tela - altura_janela) // 2
-    root.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
-    root.title("Identifique-se, Usuário:")
-    root.protocol("WM_DELETE_WINDOW", obter_nome)
-
-    entry_nome = tk.Entry(root)
-    entry_nome.pack()
-
-    botao = tk.Button(root, text="Enviar", command=obter_nome)
-    botao.pack()
-
-    root.mainloop()
 
     pygame.mixer.music.load("Recursos/mainSom.mp3")
     pygame.mixer.music.play(-1)
@@ -165,6 +140,37 @@ def jogar():
 
         pygame.display.update()
 
+def capturar_nome():
+    global nome
+    nome = ""
+
+    def obter_nome():
+        nonlocal entry_nome  # ← permite acessar a variável da função externa
+        nome_input = entry_nome.get()
+        if not nome_input:
+            messagebox.showwarning("Aviso", "Por favor, digite seu nome!")
+        else:
+            global nome
+            nome = nome_input
+            root.destroy()
+
+    root = tk.Tk()
+    largura_janela = 300
+    altura_janela = 50
+    largura_tela = root.winfo_screenwidth()
+    altura_tela = root.winfo_screenheight()
+    pos_x = (largura_tela - largura_janela) // 2
+    pos_y = (altura_tela - altura_janela) // 2
+    root.geometry(f"{largura_janela}x{altura_janela}+{pos_x}+{pos_y}")
+    root.title("Identifique-se, Usuário:")
+
+    entry_nome = tk.Entry(root)
+    entry_nome.pack()
+
+    botao = tk.Button(root, text="Enviar", command=obter_nome)
+    botao.pack()
+
+    root.mainloop()
 
 def start():
     larguraButtonJogar = 401
@@ -192,7 +198,8 @@ def start():
                     #pygame.mixer.music.play(-1)
                     larguraButtonJogar = 401
                     alturaButtonJogar  = 91
-                    jogar()
+                    capturar_nome()
+                    telaBoasVindas()
                 if sairRect.collidepoint(evento.pos):
                     #pygame.mixer.music.play(-1)
                     larguraButtonSair = 401
@@ -285,6 +292,8 @@ def dead():
                     alturaButtonVoltar = 91
             elif evento.type == pygame.MOUSEBUTTONUP:
                 if voltarRect.collidepoint(evento.pos):
+                    pygame.mixer.music.load("Recursos/somMenu.mp3")
+                    pygame.mixer.music.play(-1)
                     larguraButtonVoltar = 401
                     alturaButtonVoltar = 91
                     return
@@ -300,9 +309,9 @@ def dead():
         relogio.tick(60)
 
 def telaBoasVindas():
-    fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.jpg")
-    textoBemVindo = fonteNome.render(f"{nome}, True, branco")
-    falar("Bem Vindo", nome)
+    fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.png")
+    textoBemVindo = fonteNome.render(f"{nome}", True, branco)
+    #falar("Bem Vindo", nome)
 
     while True:
         tela.fill(branco)
@@ -312,8 +321,10 @@ def telaBoasVindas():
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                jogar()
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_w:
+                    jogar()
+                    return
 
         pygame.display.update()
         relogio.tick(60)
