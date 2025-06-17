@@ -146,7 +146,7 @@ def jogar():
         # Desenhar player
         tela.blit(mainJogador, player_rect)
 
-        texto_pontos = fonteNome.render(f"Pontos: {pontos}", True, azul)
+        texto_pontos = fonteNome.render(f"Pontos: {pontos} - Press Space to Pause", True, azul)
         tela.blit(texto_pontos, (10, 10))
 
         pygame.display.update()
@@ -318,10 +318,10 @@ def dead(pontos):
 
         tela.fill(branco)
         tela.blit(fundoMorte, (0, 0))
-        yOffSet = 500
+        yLog = 500
         for linha in logsRenderizados:
-            tela.blit(linha, (300, yOffSet))
-            yOffSet += 40
+            tela.blit(linha, (370, yLog))
+            yLog += 30
 
         tela.blit(voltarButton, (275, 345))
 
