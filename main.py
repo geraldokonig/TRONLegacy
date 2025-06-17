@@ -17,6 +17,7 @@ icone = pygame.image.load("Recursos/icone.png")
 pygame.display.set_icon(icone)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
+azul = (0, 221, 252)
 menuTron = pygame.image.load("Recursos/menuTron.png")
 menuJogar = pygame.image.load("Recursos/menuJogar.png")
 menuSair = pygame.image.load("Recursos/menuSair.png")
@@ -28,7 +29,7 @@ mainFundo = pygame.image.load("Recursos/mainFundo.png")
 fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
 #somMoeda = pygame.mixer.Sound("assets/explosao.wav")
-fonteNome = pygame.font.SysFont("arial",120)
+fonteNome = pygame.font.SysFont("TRON",50)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
 
@@ -186,12 +187,12 @@ def capturar_nome():
     root.mainloop()
 
 def start():
-    larguraButtonJogar = 401
-    alturaButtonJogar  = 91
-    larguraButtonSair = 401
-    alturaButtonSair  = 91
-    larguraButtonCreditos = 401
-    alturaButtonCreditos = 91
+    larguraButtonJogar = 380
+    alturaButtonJogar  = 85
+    larguraButtonSair = 380
+    alturaButtonSair  = 85
+    larguraButtonCreditos = 380
+    alturaButtonCreditos = 85
 
     while True:
         for evento in pygame.event.get():
@@ -199,29 +200,29 @@ def start():
                 quit()
             elif evento.type == pygame.MOUSEBUTTONDOWN:
                 if jogarRect.collidepoint(evento.pos):
-                    larguraButtonJogar = 401
-                    alturaButtonJogar  = 91
+                    larguraButtonJogar = 380
+                    alturaButtonJogar  = 85
                 if sairRect.collidepoint(evento.pos):
-                    larguraButtonSair = 401
-                    alturaButtonSair  = 91
+                    larguraButtonSair = 380
+                    alturaButtonSair  = 85
 
                 
             elif evento.type == pygame.MOUSEBUTTONUP:
                 if jogarRect.collidepoint(evento.pos):
                     #pygame.mixer.music.play(-1)
-                    larguraButtonJogar = 401
-                    alturaButtonJogar  = 91
+                    larguraButtonJogar = 380
+                    alturaButtonJogar  = 45
                     capturar_nome()
                     telaBoasVindas()
                 if sairRect.collidepoint(evento.pos):
                     #pygame.mixer.music.play(-1)
-                    larguraButtonSair = 401
-                    alturaButtonSair  = 91
+                    larguraButtonSair = 380
+                    alturaButtonSair  = 85
                     quit()
                 if creditosRect.collidepoint(evento.pos):
                     #pygame.mixer.music.play(-1)
-                    larguraButtonCreditos = 401
-                    alturaButtonCreditos = 91
+                    larguraButtonCreditos = 380
+                    alturaButtonCreditos = 85
                     creditos()
                     
             
@@ -229,16 +230,16 @@ def start():
         tela.blit(menuTron, (0,0) )
 
         jogarButton = pygame.image.load("Recursos/menuJogar.png")
-        jogarRect = jogarButton.get_rect(topleft=(300, 270))
-        tela.blit(jogarButton, (300,270))
+        jogarRect = jogarButton.get_rect(topleft=(315, 235))
+        tela.blit(jogarButton, (315, 235))
         
         sairButton = pygame.image.load("Recursos/menuSair.png")
-        sairRect = sairButton.get_rect(topleft=(300, 385))
-        tela.blit(sairButton, (300,385))
+        sairRect = sairButton.get_rect(topleft=(315, 345))
+        tela.blit(sairButton, (315, 345))
         
         creditosButton = pygame.image.load("Recursos/menuCreditos.png")
-        creditosRect = creditosButton.get_rect(topleft=(300, 500))
-        tela.blit(creditosButton, (300,500))
+        creditosRect = creditosButton.get_rect(topleft=(315, 455))
+        tela.blit(creditosButton, (315, 455))
         
         pygame.display.update()
         relogio.tick(60)
@@ -323,13 +324,13 @@ def dead():
 
 def telaBoasVindas():
     fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.png")
-    textoBemVindo = fonteNome.render(f"{nome}", True, branco)
+    textoBemVindo = fonteNome.render(f"Bem-Vindo {nome}\nRecolha os fragmentos da sua nave e sobreviva\nPressione ESPAÇO para Pausar\n", True, azul)
     #falar("Bem Vindo", nome)
 
     while True:
         tela.fill(branco)
         tela.blit(fundoBoasVindas, (0, 0))
-        tela.blit(textoBemVindo, (450, 0))
+        tela.blit(textoBemVindo, (100, 0))
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
