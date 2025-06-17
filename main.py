@@ -4,7 +4,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox
 #from Recursos.basicos import inicializarBancoDeDados
-#from Recursos.basicos import escreverDados
+#from Recursos.funcoes import escreverDados
 import json
 
 pygame.init()
@@ -17,7 +17,7 @@ icone = pygame.image.load("Recursos/icone.png")
 pygame.display.set_icon(icone)
 branco = (255,255,255)
 preto = (0, 0 ,0 )
-azul = (0, 221, 252)
+azul = (87, 229, 249)
 menuTron = pygame.image.load("Recursos/menuTron.png")
 menuJogar = pygame.image.load("Recursos/menuJogar.png")
 menuSair = pygame.image.load("Recursos/menuSair.png")
@@ -322,14 +322,12 @@ def dead():
 def telaBoasVindas():
     fundoBoasVindas = pygame.image.load("Recursos/fundoBoasVindas.png")
     textoBemVindo = fonteNome.render(f"Bem-Vindo {nome}", True, azul)
-    textoInstrucoes = fonteNome.render(f"Recolha os fragmentos da sua nave", True, azul)
     #falar("Bem Vindo", nome)
 
     while True:
         tela.fill(branco)
         tela.blit(fundoBoasVindas, (0, 0))
         tela.blit(textoBemVindo, (370, 155))
-        tela.blit(textoInstrucoes, (200, 215))
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
