@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 import os
 import tkinter as tk
 from tkinter import messagebox
@@ -27,14 +28,18 @@ mainJogador = pygame.image.load("Recursos/mainJogador.png")
 mainObstaculo = pygame.image.load("Recursos/mainObstaculo.png")
 mainFundo = pygame.image.load("Recursos/mainFundo.png")
 fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
+discoTron = pygame.image.load("Recursos/discoTron.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
-fonteNome = pygame.font.SysFont("TRON",20)
+fonteNome = pygame.font.Font("Recursos/TRON.ttf", 15)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
 
 def jogar():
     largura_janela = 300
     altura_janela = 50
+
+    angulo_disco = 0
+    escala_base = 1.0
 
     pygame.mixer.music.load("Recursos/mainSom.mp3")
     pygame.mixer.music.play(-1)
@@ -74,7 +79,7 @@ def jogar():
         pygame.time.delay(1000)
 
     def telaPausa():
-        textoPausa = fonteNome.render("Jogo Pausado - Pressione ESPAÇO", True, azul)
+        textoPausa = fonteNome.render("Jogo Pausado - Pressione SPACE", True, azul)
         tela.blit(textoPausa, (tamanho[0] // 2 - textoPausa.get_width() // 2, tamanho[1] // 2))
         pygame.display.update()
 
@@ -116,7 +121,8 @@ def jogar():
         obstacle_timer += 1
         if obstacle_timer > 120:
             obstacle_timer = 0
-            obst_y = random.randint(50, tamanho[1] - 70)
+            altura_obstaculo = mainObstaculo.get_height()
+            obst_y = random.randint(0, tamanho[1] - altura_obstaculo)
             new_obst = mainObstaculo.get_rect(topleft=(tamanho[0], obst_y))
             obstacles.append(new_obst)
 
@@ -127,15 +133,35 @@ def jogar():
                 obstacles.remove(obst)
                 pontos += 1
 
-            if player_rect.colliderect(obst):
+            player_mask = pygame.mask.from_surface(mainJogador)
+            obstacle_mask = pygame.mask.from_surface(mainObstaculo)
+            offset = (obst.x - player_rect.x, obst.y - player_rect.y)
+
+            if player_mask.overlap(obstacle_mask, offset):
                 pygame.mixer.music.stop()
                 dead(pontos)
-                return 
+                return
         
         tela.blit(mainJogador, player_rect)
 
         texto_pontos = fonteNome.render(f"Pontos: {pontos} - Press Space to Pause", True, azul)
         tela.blit(texto_pontos, (10, 10))
+
+        angulo_disco += 0.05
+        escala = escala_base + 0.1 * math.sin(angulo_disco)
+
+        # Redimensiona a imagem com base na escala atual
+        largura_original, altura_original = discoTron.get_size()
+        novo_tamanho = (int(largura_original * escala), int(altura_original * escala))
+        disco_pulsante = pygame.transform.smoothscale(discoTron, novo_tamanho)
+
+        # Posição ajustada para manter o disco no canto mesmo com a mudança de escala
+        pos_x = 1000 - novo_tamanho[0] - 20  # margem da direita
+        pos_y = 20  # margem do topo
+
+        # Desenha o disco na tela
+        tela.blit(disco_pulsante, (pos_x, pos_y))
+
 
         pygame.display.update()
 
@@ -280,7 +306,7 @@ def dead(pontos):
         dataLog = registro["data"]
         horaLog = registro["hora"]
         pontosLog = registro.get("pontos", 0)
-        textoLog = f"{nomeLog} - {dataLog} às {horaLog} - Pontos: {pontosLog}"
+        textoLog = f"{nomeLog} - {dataLog} - {horaLog} - Pontos: {pontosLog}"
         textoLogRender = fonteNome.render(textoLog, True, azul)
         logsRenderizados.append(textoLogRender)
 
@@ -305,7 +331,7 @@ def dead(pontos):
         tela.blit(fundoMorte, (0, 0))
         yLog = 500
         for linha in logsRenderizados:
-            tela.blit(linha, (370, yLog))
+            tela.blit(linha, (250, yLog))
             yLog += 30
 
         tela.blit(voltarButton, (275, 345))
