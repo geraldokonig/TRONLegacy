@@ -28,7 +28,6 @@ mainObstaculo = pygame.image.load("Recursos/mainObstaculo.png")
 mainFundo = pygame.image.load("Recursos/mainFundo.png")
 fundoMorte = pygame.image.load("Recursos/fundoMorte.png")
 #somColisao = pygame.mixer.Sound("assets/missile.wav")
-#somMoeda = pygame.mixer.Sound("assets/explosao.wav")
 fonteNome = pygame.font.SysFont("TRON",20)
 pygame.mixer.music.load("Recursos/somMenu.mp3")
 pygame.mixer.music.play(-1)
@@ -40,7 +39,6 @@ def jogar():
     pygame.mixer.music.load("Recursos/mainSom.mp3")
     pygame.mixer.music.play(-1)
 
-    # Inicializações da jogabilidade
     player_speed_y = 0
     gravity = 0.5
     fly_force = -10
@@ -59,7 +57,6 @@ def jogar():
     rodando = True
     pausado = False
 
-    # Define a contagem regressiva
     def contagemRegressiva():
         for i in range(3, 0, -1):
             tela.blit(mainFundo, (0, 0))
@@ -99,21 +96,16 @@ def jogar():
             telaPausa()
             continue
                             
-
-        # Movimento fundo
         bg_x -= velocidade_fundo
         if bg_x <= -tamanho[0]:
             bg_x = 0
 
-        # Desenhar fundo com rolagem infinita
         tela.blit(mainFundo, (bg_x, 0))
         tela.blit(mainFundo, (bg_x + tamanho[0], 0))
 
-        # Física do player
         player_speed_y += gravity
         player_rect.y += player_speed_y
 
-        # Limites vertical
         if player_rect.y < 0:
             player_rect.y = 0
             player_speed_y = 0
@@ -121,7 +113,6 @@ def jogar():
             dead(pontos)
             return
         
-        # Criar obstáculos
         obstacle_timer += 1
         if obstacle_timer > 120:
             obstacle_timer = 0
@@ -129,21 +120,18 @@ def jogar():
             new_obst = mainObstaculo.get_rect(topleft=(tamanho[0], obst_y))
             obstacles.append(new_obst)
 
-        # Mover e desenhar obstáculos
         for obst in obstacles[:]:
             obst.x -= 6
             tela.blit(mainObstaculo, obst)
             if obst.right < 0:
                 obstacles.remove(obst)
-                pontos += 1  # Pontuar ao passar um obstáculo
+                pontos += 1
 
-            # Detectar colisão player x obstáculo
             if player_rect.colliderect(obst):
                 pygame.mixer.music.stop()
                 dead(pontos)
                 return 
         
-        # Desenhar player
         tela.blit(mainJogador, player_rect)
 
         texto_pontos = fonteNome.render(f"Pontos: {pontos} - Press Space to Pause", True, azul)
@@ -206,18 +194,15 @@ def start():
                 
             elif evento.type == pygame.MOUSEBUTTONUP:
                 if jogarRect.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
                     larguraButtonJogar = 380
                     alturaButtonJogar  = 45
                     capturar_nome()
                     telaBoasVindas()
                 if sairRect.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
                     larguraButtonSair = 380
                     alturaButtonSair  = 85
                     quit()
                 if creditosRect.collidepoint(evento.pos):
-                    #pygame.mixer.music.play(-1)
                     larguraButtonCreditos = 380
                     alturaButtonCreditos = 85
                     creditos()
