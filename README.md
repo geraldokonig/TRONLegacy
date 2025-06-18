@@ -5,3 +5,6 @@ Projeto desenvolvido com  base em um jogo em pygame com o tema TRON: Legacy, fil
 Desviar dos obstáculos de C.L.U lhe concede 1 ponto. Jogo simples mas com ênfase na temática e trilha sonora produzida por Daft Punk.
 
 Tecnologias e bibliotecas utilizadas: python, pygame, math, random, datetime, cx_Freeze
+
+
+Colega Testador: Pedro Konig Scheurer, RA 1137877, Bom Jogo!
